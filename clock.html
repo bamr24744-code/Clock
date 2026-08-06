@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Clock</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css"/>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="clock">
+            <div class="circle" id="sc" style="--clr:#04fc43;"><i></i></div>
+            <div class="circle circle2" id="mn" style="--clr:#fee800;"><i></i></div>
+            <div class="circle circle3" id="hr" style="--clr:#ff2972;"><i></i></div>
+
+            <span style="--i:1;"><b>1</b></span>
+            <span style="--i:2;"><b>2</b></span>
+            <span style="--i:3;"><b>3</b></span>
+            <span style="--i:4;"><b>4</b></span>
+            <span style="--i:5;"><b>5</b></span>
+            <span style="--i:6;"><b>6</b></span>
+            <span style="--i:7;"><b>7</b></span>
+            <span style="--i:8;"><b>8</b></span>
+            <span style="--i:9;"><b>9</b></span>
+            <span style="--i:10;"><b>10</b></span>
+            <span style="--i:11;"><b>11</b></span>
+            <span style="--i:12;"><b>12</b></span>
+        </div>
+
+        <!-- Digital Clock -->
+        <div id="time">
+            <div id="hours" style="--clr:#ff2972;">00</div>
+            <div id="minutes" style="--clr:#fee800;">00</div>
+            <div id="seconds" style="--clr:#04fc43;">00</div>
+            <div id="ampm">AM</div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ 1. تعريف عناصر DOM خارج الدالة (Caching) لتجنب البحث المتكرر في الصفحة
+       
+        const hr = document.querySelector('#hr');
+        const mn = document.querySelector('#mn');
+        const sc = document.querySelector('#sc');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const ampmEl = document.getElementById('ampm');
+
+        function updateClock() {
+            // ✅ 2. استدعاء الوقت مرة واحدة فقط في كل دورة
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+
+            // ✅ 3. حساب زوايا العقارب (معادلة أدق لساعة العقارب)
+            const hh = (h % 12) * 30 + (m / 2); 
+            const mm = m * 6;
+            const ss = s * 6;
+
+            hr.style.transform = `rotateZ(${hh}deg)`;
+            mn.style.transform = `rotateZ(${mm}deg)`;
+            sc.style.transform = `rotateZ(${ss}deg)`;
+
+            // ✅ 4. تحويل الوقت لنظام 12 ساعة وإصلاح مشكلة منتصف الليل (00 تصبح 12)
+            const h12 = h % 12 || 12; 
+            const ampm = h >= 12 ? 'PM' : 'AM';
+
+            // ✅ 5. استخدام padStart لإضافة الصفر بطريقة حديثة ونظيفة
+            hoursEl.textContent = String(h12).padStart(2, '0');
+            minutesEl.textContent = String(m).padStart(2, '0');
+            secondsEl.textContent = String(s).padStart(2, '0');
+            ampmEl.textContent = ampm;
+        }
+
+        // ✅ 6. تحديد زمن التحديث بـ 1000 مللي ثانية (ثانية واحدة)
+        setInterval(updateClock, 1000);
+        
+        // ✅ 7. استدعاء الدالة فوراً عند تحميل الصفحة لتجنب تأخر ظهور الوقت لمدة ثانية
+        updateClock();
+    </script>
+</body>
+</html>
